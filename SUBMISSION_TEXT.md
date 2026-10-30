@@ -2,21 +2,20 @@
 
 ### Primary Deliverable Link
 ```
-https://github.com/yourusername/cynbit-ai-cognicare
+https://github.com/prime3436/cynbit-ai-cognicare
 ```
-*(Push the local `C:\Users\HP\cynbit-ai-cognicare` repository to GitHub and replace with your URL, or zip the folder and provide a Google Drive link).*
 
 ---
 
 ### Additional Deliverable Links
 1. **AI Opportunity Report:**  
-   `https://github.com/yourusername/cynbit-ai-cognicare/blob/main/reports/AI_OPPORTUNITY_REPORT.md`
+   `https://github.com/prime3436/cynbit-ai-cognicare/blob/main/reports/AI_OPPORTUNITY_REPORT.md`
 2. **Technical Approach Report:**  
-   `https://github.com/yourusername/cynbit-ai-cognicare/blob/main/reports/TECHNICAL_APPROACH_REPORT.md`
+   `https://github.com/prime3436/cynbit-ai-cognicare/blob/main/reports/TECHNICAL_APPROACH_REPORT.md`
 3. **Evaluation Notebook:**  
-   `https://github.com/yourusername/cynbit-ai-cognicare/blob/main/notebooks/cynbit_ai_poc_evaluation.ipynb`
+   `https://github.com/prime3436/cynbit-ai-cognicare/blob/main/notebooks/cynbit_ai_poc_evaluation.ipynb`
 4. **FastAPI OpenAPI Schema:**  
-   `https://github.com/yourusername/cynbit-ai-cognicare/blob/main/api.py`
+   `https://github.com/prime3436/cynbit-ai-cognicare/blob/main/api.py`
 
 ---
 

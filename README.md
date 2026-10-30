@@ -63,7 +63,7 @@ Performance evaluated across 50 property maintenance scenarios against baselines
 
 ### 1. Installation
 ```bash
-git clone https://github.com/yourusername/cynbit-ai-cognicare.git
+git clone https://github.com/prime3436/cynbit-ai-cognicare.git
 cd cynbit-ai-cognicare
 pip install -r requirements.txt
 ```
