@@ -1,21 +1,15 @@
-"""
-TenantEase CogniCare - Enterprise REST API
-Built with FastAPI and Pydantic v2.
-"""
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from PIL import Image
 import io
-import json
 
 from core.models import TriageRequest, TriageResult
 from core.agent import CogniCareAgent
 from core.benchmarks import get_benchmark_dataframe
 
 app = FastAPI(
-    title="TenantEase CogniCare - Autonomous Property Triage & Dispatch API",
-    description="Enterprise Cognitive AI agent for automated multimodal defect diagnosis, hazard mitigation, and SLA dispatch for Cynbit's TenantEase ecosystem.",
+    title="TenantEase CogniCare API",
     version="2.4.0"
 )
 
@@ -33,7 +27,6 @@ agent = CogniCareAgent()
 def read_root():
     return {
         "service": "TenantEase CogniCare API",
-        "organization": "Cynbit Technologies",
         "status": "operational",
         "version": "2.4.0",
         "docs_url": "/docs"
@@ -47,9 +40,6 @@ async def triage_ticket(
     urgency_claimed: Optional[str] = Form("Normal"),
     image_file: Optional[UploadFile] = File(None)
 ):
-    """
-    Multimodal triage endpoint. Accepts text description + optional image upload.
-    """
     pil_image = None
     if image_file:
         try:
@@ -66,8 +56,7 @@ async def triage_ticket(
         urgency_claimed_by_tenant=urgency_claimed
     )
 
-    result = agent.triage(req, pil_image)
-    return result
+    return agent.triage(req, pil_image)
 
 @app.get("/api/v1/benchmarks")
 def read_benchmarks():

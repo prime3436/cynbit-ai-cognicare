@@ -1,19 +1,10 @@
-"""
-Benchmark and Evaluation Suite for TenantEase CogniCare.
-Compares:
-1. Legacy Keyword / Rule-Based Parser
-2. Single-Pass Zero-Shot LLM
-3. TenantEase CogniCare Multi-Agent Pipeline
-"""
 import pandas as pd
-import numpy as np
-from typing import Dict, Any, List
 import plotly.graph_objects as go
 import plotly.express as px
 
 BENCHMARK_DATA = [
     {
-        "approach": "Legacy Rule-Based Parser",
+        "approach": "Regex & Rule-Based Parser",
         "category_accuracy": 62.4,
         "hazard_recall": 58.0,
         "hallucination_rate": 0.0,
@@ -24,7 +15,7 @@ BENCHMARK_DATA = [
         "technician_dispatch_accuracy": 59.1
     },
     {
-        "approach": "Single-Pass Zero-Shot LLM (e.g. Base GPT-4o-mini / Gemini Flash)",
+        "approach": "Single-Pass Zero-Shot LLM",
         "category_accuracy": 86.8,
         "hazard_recall": 84.5,
         "hallucination_rate": 8.4,
@@ -35,7 +26,7 @@ BENCHMARK_DATA = [
         "technician_dispatch_accuracy": 82.3
     },
     {
-        "approach": "TenantEase CogniCare (Multi-Agent Cognitive Pipeline)",
+        "approach": "TenantEase CogniCare (Multi-Agent)",
         "category_accuracy": 97.2,
         "hazard_recall": 99.4,
         "hallucination_rate": 0.6,
@@ -56,8 +47,8 @@ def create_radar_chart() -> go.Figure:
         "Hazard Detection Recall",
         "SLA Assignment Precision",
         "Technician Dispatch Accuracy",
-        "Zero-Hallucination Rate (100 - Hallucination)",
-        "Autonomous Resolution Rate (100 - Escalation)"
+        "Zero-Hallucination Rate",
+        "Autonomous Resolution Rate"
     ]
 
     fig = go.Figure()
@@ -71,7 +62,7 @@ def create_radar_chart() -> go.Figure:
             100.0 - item["hallucination_rate"],
             100.0 - item["human_triage_escalation_rate"]
         ]
-        values.append(values[0])  # Close the radar loop
+        values.append(values[0])
 
         fig.add_trace(go.Scatterpolar(
             r=values,
@@ -88,7 +79,7 @@ def create_radar_chart() -> go.Figure:
             )
         ),
         showlegend=True,
-        title="<b>Agentic Cognitive Pipeline vs. Baselines (Multi-Metric Performance)</b>",
+        title="Multi-Metric Benchmark Comparison",
         height=450,
         margin=dict(l=40, r=40, t=60, b=40),
         template="plotly_dark"
@@ -106,10 +97,10 @@ def create_cost_latency_chart() -> go.Figure:
         color="approach",
         hover_name="approach",
         text="approach",
-        title="<b>Latency (ms) vs. Cost per 1k Invocations ($) — Bubble Size = Accuracy</b>",
+        title="Latency vs. Operating Cost per 1k Invocations",
         labels={
-            "avg_latency_ms": "Average End-to-End Latency (ms)",
-            "cost_per_1k_tickets_usd": "Operating Cost ($ per 1,000 Tickets)"
+            "avg_latency_ms": "Average Latency (ms)",
+            "cost_per_1k_tickets_usd": "Operating Cost ($ per 1k Tickets)"
         },
         template="plotly_dark"
     )

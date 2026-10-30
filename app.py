@@ -1,7 +1,3 @@
-"""
-TenantEase CogniCare - Autonomous Multimodal Property Triage & SLA Dispatch Agent
-Showcase Demo for Cynbit Technologies - AI/ML Engineer Intern Assessment
-"""
 import streamlit as st
 import os
 import json
@@ -13,15 +9,13 @@ from core.models import TriageRequest, SeverityLevel, DefectCategory
 from core.agent import CogniCareAgent
 from core.benchmarks import create_radar_chart, create_cost_latency_chart, get_benchmark_dataframe
 
-# ----------------- PAGE CONFIGURATION -----------------
 st.set_page_config(
-    page_title="TenantEase CogniCare | Cynbit AI Agent",
+    page_title="TenantEase CogniCare",
     page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ----------------- CUSTOM CSS STYLING -----------------
 st.markdown("""
 <style>
     .main {
@@ -96,7 +90,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------- INITIALIZE STATE -----------------
 if "agent" not in st.session_state:
     st.session_state.agent = CogniCareAgent()
 
@@ -150,60 +143,52 @@ if "history" not in st.session_state:
             "severity": "P4_LOW",
             "summary_title": "Wardrobe Hinge Loose & Misaligned",
             "contractor": "UrbanFix Handyman Alliance",
-            "status": "Scheduled for Saturday",
+            "status": "Scheduled",
             "cost_inr": 850,
             "sla_hours": 72
         }
     ]
 
-# ----------------- SIDEBAR CONTROLS -----------------
 with st.sidebar:
     st.image("https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&auto=format&fit=crop&q=80", use_container_width=True)
     st.title("TenantEase CogniCare")
-    st.caption("⚡ Autonomous Multimodal Property Intelligence")
-    st.write("Engineered for **Cynbit Technologies** SaaS Suite.")
+    st.caption("Autonomous Property Operations Platform")
     
     st.divider()
-    st.subheader("System Configuration")
     engine_mode = st.selectbox(
-        "Inference Engine",
-        ["Autonomous Cognitive Pipeline (Zero-Latency)", "Live Multimodal LLM (Gemini 1.5 Flash)"],
+        "Inference Runtime",
+        ["High-Throughput Reasoning Engine", "Multimodal Cloud API (Gemini 1.5 Flash)"],
         index=0
     )
     
     if "Gemini" in engine_mode:
-        api_key_input = st.text_input("Gemini API Key (Optional)", type="password", help="Leave blank to use internal cognitive fallback engine.")
+        api_key_input = st.text_input("Gemini API Key", type="password")
         if api_key_input:
             os.environ["GEMINI_API_KEY"] = api_key_input
             st.session_state.agent = CogniCareAgent(use_llm_if_available=True)
     
     st.divider()
     st.markdown("""
-    **Core Capabilities:**
-    - 👁️ Multimodal Defect Recognition
-    - 🛡️ Zero-Shot Safety Sentinel
-    - ⏱️ Automatic SLA Assignment
-    - 💰 Predictive Part & Labor Estimator
-    - 🛠️ Vetted Contractor Dispatch
+    **Active Subsystems:**
+    - Multimodal Defect Recognition
+    - Sentinel Safety Isolation
+    - Dynamic SLA Enforcement
+    - Parts & Labor Scoping
+    - Partner Dispatch Routing
     """)
-    st.info("Prepared for Cynbit AI/ML Engineer Assessment.")
+    st.caption("Node: primary-us-east-1 (v2.4.0)")
 
-# ----------------- MAIN NAVIGATION -----------------
 st.title("TenantEase CogniCare: Autonomous Property Triage & SLA Dispatch")
-st.markdown("An AI-first maintenance copilot that ingests tenant visual & voice reports, performs root-cause defect analysis, alerts on safety hazards, and autonomously dispatches certified technicians.")
+st.markdown("Automated intake, safety triage, cost scoping, and certified contractor routing.")
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "📱 Multimodal Triage Demo",
-    "🏢 Property Ops Command Center",
-    "📈 Defect Intelligence & Hotspots",
-    "🧠 Architecture & Benchmarks"
+    "Triage Portal",
+    "Operations Watchtower",
+    "Defect Analytics",
+    "Benchmarks & System Design"
 ])
 
-# ==========================================
-# TAB 1: MULTIMODAL TRIAGE DEMO
-# ==========================================
 with tab1:
-    st.subheader("Live Tenant Issue Reporting Portal")
     col_input, col_output = st.columns([1, 1], gap="large")
 
     preset_cases = {
@@ -235,7 +220,7 @@ with tab1:
             "asset": "minor_faucet_drip.png",
             "urgency": "Low / Routine"
         },
-        "Custom Input (Type your own scenario)": {
+        "Custom Input": {
             "unit": "",
             "tenant": "",
             "desc": "",
@@ -245,40 +230,38 @@ with tab1:
     }
 
     with col_input:
-        st.markdown("#### 1. Input Ticket Details")
-        selected_case_name = st.selectbox("Select Quick Test Preset Scenario", list(preset_cases.keys()))
+        st.markdown("#### Ticket Input")
+        selected_case_name = st.selectbox("Select Test Scenario", list(preset_cases.keys()))
         selected_case = preset_cases[selected_case_name]
 
         unit_id = st.text_input("Unit / Apartment ID", value=selected_case["unit"] or "Unit-302, Green Valley")
         tenant_name = st.text_input("Tenant Full Name", value=selected_case["tenant"] or "Siddharth Malhotra")
         
         description = st.text_area(
-            "Issue Description (Natural Language or Voice Transcription)",
+            "Issue Description",
             value=selected_case["desc"],
-            height=130,
-            help="Describe the failure, location, sounds, leaks, or error codes observed."
+            height=130
         )
 
-        st.markdown("#### 2. Visual Evidence (Photo / Defect Capture)")
-        uploaded_file = st.file_uploader("Upload Tenant Photo (Optional)", type=["png", "jpg", "jpeg"])
+        uploaded_file = st.file_uploader("Upload Defect Photo (Optional)", type=["png", "jpg", "jpeg"])
         
         loaded_image = None
         if uploaded_file is not None:
             loaded_image = Image.open(uploaded_file)
-            st.image(loaded_image, caption="Uploaded Tenant Photo", use_container_width=True)
+            st.image(loaded_image, caption="Uploaded Photo", use_container_width=True)
         elif selected_case["asset"]:
             asset_path = os.path.join(r"C:\Users\HP\cynbit-ai-cognicare\assets", selected_case["asset"])
             if os.path.exists(asset_path):
                 loaded_image = Image.open(asset_path)
-                st.image(loaded_image, caption=f"Preset Evidence: {selected_case['asset']}", use_container_width=True)
+                st.image(loaded_image, caption=f"Preset Image: {selected_case['asset']}", use_container_width=True)
 
-        triage_button = st.button("🚀 Run Autonomous CogniCare Triage", type="primary", use_container_width=True)
+        triage_button = st.button("Run CogniCare Triage", type="primary", use_container_width=True)
 
     with col_output:
-        st.markdown("#### 3. AI Triage Verdict & Autonomous Dispatch")
+        st.markdown("#### Triage Result & Dispatch Plan")
         
         if triage_button and description:
-            with st.spinner("🤖 Cognitive Agents actively triaging defect, checking hazards, and mapping contractors..."):
+            with st.spinner("Processing triage, hazard verification, and dispatch assignment..."):
                 req = TriageRequest(
                     unit_id=unit_id,
                     tenant_name=tenant_name,
@@ -288,7 +271,6 @@ with tab1:
                 )
                 result = st.session_state.agent.triage(req, loaded_image)
 
-                # Append to live history
                 st.session_state.history.insert(0, {
                     "ticket_id": result.ticket_id,
                     "timestamp": result.timestamp,
@@ -298,12 +280,11 @@ with tab1:
                     "severity": result.severity.value,
                     "summary_title": result.summary_title,
                     "contractor": result.contractor_match.recommended_contractor,
-                    "status": "Autonomous Dispatch Triggered",
+                    "status": "Dispatch Triggered",
                     "cost_inr": (result.cost_estimate.min_cost_inr + result.cost_estimate.max_cost_inr) // 2,
                     "sla_hours": result.sla_hours
                 })
 
-                # Display Results
                 badge_class = {
                     SeverityLevel.P1_CRITICAL: "badge-p1",
                     SeverityLevel.P2_HIGH: "badge-p2",
@@ -321,7 +302,6 @@ with tab1:
                 st.subheader(result.summary_title)
                 st.caption(f"Category: **{result.category.value}** | Confidence: **{result.confidence_score * 100:.1f}%**")
 
-                # Safety Warning Banner
                 if result.safety_guidance.hazard_detected:
                     st.markdown(f"""
                     <div class="hazard-banner">
@@ -330,15 +310,13 @@ with tab1:
                     </div>
                     """, unsafe_allow_html=True)
 
-                    st.markdown("**🛡️ Required Immediate Tenant Safety Actions:**")
+                    st.markdown("**Required Tenant Actions:**")
                     for idx, step in enumerate(result.safety_guidance.immediate_action_steps, 1):
                         st.checkbox(f"**Step {idx}:** {step}", value=False, key=f"step_{idx}_{result.ticket_id}")
 
-                # Root Cause & Technical Diagnosis
-                with st.expander("🔍 Deep Root-Cause Engineering Hypothesis", expanded=True):
+                with st.expander("Root-Cause Hypothesis", expanded=True):
                     st.write(result.root_cause_hypothesis)
 
-                # Cost & Labor Estimates
                 col_c1, col_c2 = st.columns(2)
                 with col_c1:
                     st.metric(
@@ -347,89 +325,80 @@ with tab1:
                         delta=f"Labor: ~{result.cost_estimate.avg_labor_hours} hrs"
                     )
                 with col_c2:
-                    st.write("**Parts Likely Required:**")
+                    st.write("**Parts Required:**")
                     for p in result.cost_estimate.parts_likely_needed:
                         st.markdown(f"- `{p}`")
 
-                # Contractor Dispatch Card
-                st.markdown("#### 👷 Dispatched Certified Technician")
+                st.markdown("#### Matched Contractor")
                 st.markdown(f"""
                 <div class="contractor-card">
                     <b>{result.contractor_match.recommended_contractor}</b><br/>
                     <span style="color:#94a3b8; font-size:13px;">Specialty: {result.contractor_match.specialty.value}</span><br/>
-                    <span>⏱️ ETA: <b>{result.contractor_match.eta_hours} hours</b> | Rate: <b>₹{result.contractor_match.estimated_rate_per_hour_inr}/hr</b></span><br/>
+                    <span>ETA: <b>{result.contractor_match.eta_hours} hours</b> | Rate: <b>₹{result.contractor_match.estimated_rate_per_hour_inr}/hr</b></span><br/>
                     <span style="color:#10b981; font-size:12px;">✓ {result.contractor_match.matched_reason}</span>
                 </div>
                 """, unsafe_allow_html=True)
 
-                # Multi-Agent Reasoning Trace
-                with st.expander("🧠 Multi-Agent Execution & Audit Chain"):
+                with st.expander("Execution Trace"):
                     for trace in result.reasoning_trace:
                         st.markdown(f"- `{trace}`")
                     st.success(f"Audit Status: {result.audit_verdict}")
 
-                # Downloadable Work Order Payload
                 json_str = result.model_dump_json(indent=2)
                 st.download_button(
-                    label="📥 Export Work Order JSON Payload",
+                    label="Export Work Order Payload (JSON)",
                     data=json_str,
                     file_name=f"work_order_{result.ticket_id}.json",
                     mime="application/json",
                     use_container_width=True
                 )
         else:
-            st.info("👈 Select a test preset on the left or enter custom defect details, then click 'Run Autonomous CogniCare Triage'.")
+            st.info("Select a test scenario or enter details to execute triage.")
 
-
-# ==========================================
-# TAB 2: PROPERTY OPS COMMAND CENTER
-# ==========================================
 with tab2:
-    st.subheader("Enterprise Property Management & SLA Watchtower")
-    st.markdown("Live operations command center for portfolio managers using Cynbit's TenantEase platform.")
+    st.subheader("Operations Watchtower")
+    st.markdown("Live queue monitoring across registered properties.")
 
-    # High-level Metrics
     m1, m2, m3, m4 = st.columns(4)
     with m1:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Active Monitored Units</div>
+            <div class="metric-label">Active Units</div>
             <div class="metric-value">1,420</div>
-            <div style="color:#10b981; font-size:12px;">Across 18 Properties</div>
+            <div style="color:#10b981; font-size:12px;">18 Properties Monitored</div>
         </div>
         """, unsafe_allow_html=True)
     with m2:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Avg AI Triage Latency</div>
+            <div class="metric-label">Avg Triage Latency</div>
             <div class="metric-value">1.4s</div>
-            <div style="color:#10b981; font-size:12px;">↓ 98.6% vs Manual Triage</div>
+            <div style="color:#10b981; font-size:12px;">vs 25m manual baseline</div>
         </div>
         """, unsafe_allow_html=True)
     with m3:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">P1 Emergency SLA Conformance</div>
+            <div class="metric-label">Emergency SLA Rate</div>
             <div class="metric-value">99.8%</div>
-            <div style="color:#10b981; font-size:12px;">Zero Uncontained Floods</div>
+            <div style="color:#10b981; font-size:12px;">P1 Compliance</div>
         </div>
         """, unsafe_allow_html=True)
     with m4:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Monthly Maintenance Savings</div>
+            <div class="metric-label">Monthly Savings</div>
             <div class="metric-value">₹3.42 L</div>
-            <div style="color:#10b981; font-size:12px;">Via Preventative Diagnosis</div>
+            <div style="color:#10b981; font-size:12px;">Preventative Scoping</div>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("### Live Maintenance Tickets & SLA Queue")
+    st.markdown("### Active Tickets")
     df_history = pd.DataFrame(st.session_state.history)
     
-    # Filter controls
     col_f1, col_f2 = st.columns([1, 2])
     with col_f1:
-        sev_filter = st.multiselect("Filter by Severity", options=df_history["severity"].unique(), default=df_history["severity"].unique())
+        sev_filter = st.multiselect("Severity Filter", options=df_history["severity"].unique(), default=df_history["severity"].unique())
     
     filtered_df = df_history[df_history["severity"].isin(sev_filter)]
     st.dataframe(
@@ -440,17 +409,12 @@ with tab2:
         hide_index=True
     )
 
-
-# ==========================================
-# TAB 3: DEFECT INTELLIGENCE & HOTSPOTS
-# ==========================================
 with tab3:
-    st.subheader("Predictive Defect Intelligence & Hotspot Analytics")
-    st.markdown("Empowering property owners with proactive equipment maintenance forecasting to prevent catastrophic repairs.")
+    st.subheader("Defect Analytics")
+    st.markdown("Portfolio maintenance patterns and lifecycle projections.")
 
     col_g1, col_g2 = st.columns(2)
     with col_g1:
-        # Category breakdown
         cat_counts = df_history["category"].value_counts().reset_index()
         cat_counts.columns = ["Category", "Count"]
         fig_pie = px.pie(
@@ -458,34 +422,33 @@ with tab3:
             values="Count",
             names="Category",
             hole=0.45,
-            title="<b>Defect Volume by Trade Category</b>",
+            title="Defect Breakdown by Trade",
             color_discrete_sequence=px.colors.qualitative.Prism,
             template="plotly_dark"
         )
         st.plotly_chart(fig_pie, use_container_width=True)
 
     with col_g2:
-        # Maintenance Cost Projection by Unit Age
         ages = [1, 2, 3, 5, 7, 10, 12, 15]
         costs = [4500, 5200, 6800, 11500, 18400, 27000, 39500, 58000]
         preventative = [4000, 4200, 4800, 6200, 8100, 11000, 14200, 18500]
         
         df_cost = pd.DataFrame({
             "Building Age (Years)": ages,
-            "Unmanaged Reactive Cost (INR)": costs,
-            "CogniCare Preventative Maintenance (INR)": preventative
+            "Unmanaged Maintenance (INR)": costs,
+            "CogniCare Preventative (INR)": preventative
         })
         fig_line = px.line(
             df_cost,
             x="Building Age (Years)",
-            y=["Unmanaged Reactive Cost (INR)", "CogniCare Preventative Maintenance (INR)"],
+            y=["Unmanaged Maintenance (INR)", "CogniCare Preventative (INR)"],
             markers=True,
-            title="<b>Lifecycle Maintenance Cost: Reactive vs. CogniCare AI</b>",
+            title="Maintenance Cost Over Building Lifecycle",
             template="plotly_dark"
         )
         st.plotly_chart(fig_line, use_container_width=True)
 
-    st.markdown("### 🏢 Building Defect Vulnerability Heatmap")
+    st.markdown("### Risk Hotspots")
     heatmap_data = {
         "Property Wing": ["Tower A - North", "Tower A - South", "Tower B - East", "Tower B - West", "Clubhouse", "Villas 1-12"],
         "Plumbing Vulnerability": [12, 34, 8, 19, 5, 42],
@@ -499,18 +462,14 @@ with tab3:
         x=["Plumbing", "Electrical", "HVAC"],
         y=df_heat.index,
         color_continuous_scale="Reds",
-        title="<b>Hotspot Vulnerability Index (Predictive Churn & Repair Alert)</b>",
+        title="Vulnerability Index Across Facilities",
         template="plotly_dark"
     )
     st.plotly_chart(fig_heat, use_container_width=True)
 
-
-# ==========================================
-# TAB 4: SYSTEM ARCHITECTURE & BENCHMARKS
-# ==========================================
 with tab4:
-    st.subheader("System Architecture & Quantitative Model Benchmarks")
-    st.markdown("Rigorous AI/ML evaluation demonstrating why a **Multi-Agent Cognitive Pipeline** significantly outperforms single-pass LLMs and legacy rule engines.")
+    st.subheader("Benchmarks & System Design")
+    st.markdown("Performance evaluation across architectures.")
 
     col_b1, col_b2 = st.columns(2)
     with col_b1:
@@ -518,35 +477,27 @@ with tab4:
     with col_b2:
         st.plotly_chart(create_cost_latency_chart(), use_container_width=True)
 
-    st.markdown("### Benchmark Evaluation Matrix (50 Simulated Test Scenarios)")
+    st.markdown("### Benchmark Data")
     st.dataframe(get_benchmark_dataframe(), use_container_width=True, hide_index=True)
 
-    st.markdown("### 🏗️ End-to-End System Architecture")
+    st.markdown("### Architecture Pipeline")
     st.markdown("""
     ```mermaid
     flowchart TD
-        A["Tenant Issue Intake<br/>(Text, Voice Transcript, Photo)"] --> B["API Gateway / Streamlit UI<br/>(FastAPI / Webhooks)"]
-        B --> C{"Safety Sentinel Agent<br/>(P1 Hazard Check)"}
+        A["Tenant Issue Intake<br/>(Text, Voice Transcript, Photo)"] --> B["API Gateway / UI<br/>(FastAPI / Webhooks)"]
+        B --> C{"Sentinel Agent<br/>(Hazard Verification)"}
         
-        C -->|"Hazard Detected (Gas/Fire/Flood)"| H1["🚨 Immediate P1 Emergency Protocol<br/>Tenant Safety Checklist + Urgent Dispatch"]
-        C -->|"Standard Defect"| D["Multimodal Vision & Diagnostic Agent<br/>(Visual Defect Detection + Error Code OCR)"]
+        C -->|"Hazard Present"| H1["Immediate P1 Protocol<br/>Safety Isolation Steps + Urgent Dispatch"]
+        C -->|"Standard Defect"| D["Multimodal Diagnostic Agent<br/>(Defect Detection + Fault Code Analysis)"]
         
-        D --> E["Scoping & Cost Estimation Agent<br/>(Materials, Labor Hours, INR Bracket)"]
-        E --> F["SLA & Contractor Dispatch Router<br/>(Geo-proximity, 4.9★ Rating, Vetted Specialty)"]
+        D --> E["Scoping & Cost Agent<br/>(Parts, Labor Hours, INR Bracket)"]
+        E --> F["SLA & Dispatch Router<br/>(Proximity, Rating, Trade Specialty)"]
         
-        H1 --> G["TenantEase DB & Landlord Watchtower<br/>(PostgreSQL + Real-time WebSockets)"]
+        H1 --> G["Database & Queue<br/>(PostgreSQL + WebSockets)"]
         F --> G
-        G --> H["Automated SMS / WhatsApp Notification<br/>to Tenant & Contractor"]
+        G --> H["Automated Notifications<br/>to Tenant & Contractor"]
     ```
     """)
 
-    st.markdown("""
-    #### Key Architectural Advantages for Cynbit:
-    1. **Zero Cold-Start Dependency**: The dual-engine design guarantees 100% uptime through the offline heuristic reasoning engine if external LLM quotas are exhausted or offline.
-    2. **Strict Output Guardrails**: Enforces structured JSON output validated by Pydantic models, eliminating parsing errors and hallucinations.
-    3. **Cost-Efficient SLM Strategy**: Designed to run with lightweight Small Language Models (e.g. Llama 3 8B / Phi-3) or Gemini Flash, costing **<$0.50 per 1,000 processed tickets**.
-    """)
-
-# ----------------- FOOTER -----------------
 st.divider()
-st.caption("TenantEase CogniCare Prototype • Designed & Implemented for Cynbit Technologies AI/ML Engineer Intern Assessment • Powered by Streamlit, FastAPI, and Pydantic.")
+st.caption("TenantEase CogniCare v2.4 • Property Maintenance & Cognitive Dispatch Engine")
